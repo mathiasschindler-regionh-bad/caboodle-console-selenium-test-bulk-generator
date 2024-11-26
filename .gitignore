@@ -1,2 +1,6 @@
+# The virtual environment. Create locally using pip install -r requirements.txt from project dir
 *VenvBulkScript*
+
+# Added below ad hoc during deployment and can simply be removed 
 *scratch*
+*source_versions.csv*
