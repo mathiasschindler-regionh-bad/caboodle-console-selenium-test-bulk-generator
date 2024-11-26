@@ -6,11 +6,13 @@ from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.edge.options import Options as EdgeOptions
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
 def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Caboodle_DEV\BulkScriptGenerationDeploymentScripts', 
                                         console_url = 'https://spn4cdw001.sp.local/Caboodle_DEV', 
-                                        checkboxes_to_check = ['DmcsAndPackages']):
+                                        checkboxes_to_check = ['DmcsAndPackages'],
+                                        headless = True):
     """
     Automates the bulk script generation process on Caboodle.
 
@@ -27,10 +29,23 @@ def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Cab
         current_date_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         output_directory = f"{output_directory}\\{current_date_time}"
 
+        # Initialize browser with headless options
+        edge_options = EdgeOptions()
+        edge_options.add_argument("--headless")  # Enable headless mode
+        edge_options.add_argument("--disable-gpu")  # Disable GPU acceleration (useful for headless)
+        edge_options.add_argument("--no-sandbox")  # Avoids issues on certain environments
+        edge_options.add_argument("--disable-dev-shm-usage")  # Helps with low-memory systems
+
         # Initialize browser
-        browser = webdriver.Edge(
-            service=EdgeService(EdgeChromiumDriverManager().install())
-        )
+        if headless == True:
+            browser = webdriver.Edge(
+                service=EdgeService(EdgeChromiumDriverManager().install()),
+                options=edge_options  # Apply headless options
+            )
+        else:
+            browser = webdriver.Edge(
+                service=EdgeService(EdgeChromiumDriverManager().install())
+            )
 
         # Navigate to the Bulk Script Generator page
         browser.get(console_url + "/tools/BulkScriptGeneration")
@@ -93,5 +108,6 @@ if __name__ == '__main__':
     # For testing purposes will run in Cab_Ironman sandbox and only for "Sources" (much faster!)
     result = open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Cab_Ironman\BulkScriptGenerationDeploymentScriptsTest', 
                                         console_url = 'https://spn4cdw001.sp.local/Cab_Ironman', 
-                                        checkboxes_to_check = ['Sources'])
+                                        checkboxes_to_check = ['Sources'],
+                                        headless = False)
     print(result)
