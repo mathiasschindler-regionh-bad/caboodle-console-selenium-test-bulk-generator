@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
-def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Caboodle_DEV\BulkScriptGenerationDeploymentScriptsTest', 
+def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Caboodle_DEV\BulkScriptGenerationDeploymentScripts', 
                                         console_url = 'https://spn4cdw001.sp.local/Caboodle_DEV', 
                                         checkboxes_to_check = ['DmcsAndPackages']):
     """
@@ -44,6 +44,14 @@ def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Cab
         checkbox_sources = browser.find_element(By.ID, 'Sources')
         checkbox_custom_sql = browser.find_element(By.ID, 'CustomSqlObjects')
 
+        # Map checkbox IDs to their elements
+        checkbox_elements = {
+            "DmcsAndPackages": checkbox_dmcs,
+            "ComponentConfiguration": checkbox_component_config,
+            "Sources": checkbox_sources,
+            "CustomSqlObjects": checkbox_custom_sql,
+        }
+
         # Click checkbox if:
         #  1) Checkbox should be checked but is not checked
         #  2) Checkbox should not be checked but is checked 
@@ -56,7 +64,7 @@ def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Cab
         # Write the output directory path into the input element
         path_textbox = browser.find_element(By.ID, 'OutputDirectory')
         path_textbox.clear()
-        path_textbox.send_keys(dynamic_output_directory)
+        path_textbox.send_keys(output_directory)
 
         # Click the "Generate Scripts" button
         generate_btn = browser.find_element(By.ID, 'formAcceptBtn')
@@ -70,17 +78,20 @@ def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Cab
             EC.presence_of_element_located((By.ID, "FinalStatusText"))
         )
 
-        print("Script generation completed successfully!")
         # input('Please press "Enter" to close program')
 
-    except:
+        return {"status": "success", "output_dir": output_directory}
+
+    except Exception as e:
         print(f"Error! Script aborted because: {e}")
+        return {"status": "error", "error": str(e)}
 
     finally:
         browser.quit()
 
-if __name__ == 'main':
+if __name__ == '__main__':
     # For testing purposes will run in Cab_Ironman sandbox and only for "Sources" (much faster!)
-    open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Caboodle_DEV\BulkScriptGenerationDeploymentScriptsTest', 
+    result = open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Cab_Ironman\BulkScriptGenerationDeploymentScriptsTest', 
                                         console_url = 'https://spn4cdw001.sp.local/Cab_Ironman', 
-                                        checkboxes_to_check = 'Sources')
+                                        checkboxes_to_check = ['Sources'])
+    print(result)
