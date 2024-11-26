@@ -1,53 +1,60 @@
 import os
 import fnmatch
 
-# Definitions to become function parameters
-path = r"Z:\Caboodle_DEV\BulkScriptGenerationDeploymentScriptsTest"
-folder_name = '2024-10-17_15-08-32'
+def access_bulk_scripts_in_file_explorer(output: dict, 
+                                         bulk_scripts_dir = 'DmcsAndPackages'):
+    """
+    Navigates through directories based on input details and lists the contents of a specific folder.
 
-# Change to parent directory
-try:
-    os.chdir(path)
-    print(f"Successfully changed to: {os.getcwd()}")
-except FileNotFoundError:
-    print("The specified path does not exist.")
-except OSError as e:
-    print(f"Error: {e}")
+    Args:
+        output (dict): Input details with keys:
+            - "status" (str):       Status of the previous operation ("success" expected).
+            - "output_dir" (str):   Base output directory to navigate from.
+        bulk_scripts_dir (str):     Substring of a directory name to search for. Substring because Caboodle Console prefixes folders with a number which can change dynamically, e.g. "2_DmcsAndPackages".
 
-# Change to folder with execution timestamp
-try:
-    os.chdir(folder_name)
-    print(f"Successfully changed to: {os.getcwd()}")
-except FileNotFoundError:
-    print("The specified path does not exist.")
-except OSError as e:
-    print(f"Error: {e}")
+    Returns:
+        dict: A dictionary with the final status and directory contents or error details.
+    """
 
-# Find the folder that contains "EpicScriptGen" in its name
-try:
-    current_directory = os.getcwd()
-    matching_folders = [d for d in os.listdir(current_directory) if fnmatch.fnmatch(d, "*EpicScriptGen*") and os.path.isdir(d)]
-except FileNotFoundError:
-    print("No path exists containing substring EpicScriptGen.")
-except OSError as e:
-    print(f"Error: {e}")
+    try:
+        if output["status"] != "success": return {"status": "error", "error": "Invalid input status. Expected 'success'."}
 
-# Access the folder with "EpicScriptGen"
-try:
-    os.chdir(matching_folders[0])
-    print(f"Successfully changed to: {os.getcwd()}")
-except FileNotFoundError:
-    print("The specified path does not exist.")
-except OSError as e:
-    print(f"Error: {e}")
+        # Extract the output directory
+        base_path = output["output_dir"]
+
+        # Navigate to base path
+        os.chdir(base_path)
+        print(f"Successfully changed to: {os.getcwd()}")
+
+        # Find the folder that contains "EpicScriptGen" in its name
+        matching_folders = [d for d in os.listdir(base_path) if fnmatch.fnmatch(d, "*EpicScriptGen*") and os.path.isdir(d)]
+        if not matching_folders: return {"status": "error", "error": "No folder found containing 'EpicScriptGen'."}
+        # TBA: Error handling for if multiple matching folders containing 'EpicScriptGen' are found!
+
+        # Change to the matching folder
+        epic_folder_path = os.path.join(base_path, matching_folders[0])
+        os.chdir(epic_folder_path)
+        print(f"Successfully changed to EpicScriptGen folder: {os.getcwd()}")
+
+        # Search for folders that contain the bulk_scripts_dir string as a substring (no need to match the exact prefix)
+        matching_bulk_scripts_folders = [d for d in os.listdir(epic_folder_path) if bulk_scripts_dir in d and os.path.isdir(os.path.join(epic_folder_path, d))]
+        if not matching_bulk_scripts_folders: 
+            return {"status": "error", "error": f"Folder containing '{bulk_scripts_dir}' not found."}
+        else:
+            bulk_scripts_path = os.path.join(epic_folder_path, matching_bulk_scripts_folders[0])
+            os.chdir(bulk_scripts_path)
+            print(f"Successfully changed to folder containing '{bulk_scripts_dir}': {os.getcwd()} \n with contents:\n {os.listdir(bulk_scripts_path)}")     
+    
+    except FileNotFoundError as e:
+        return {"status": "error", "error": f"File not found: {str(e)}"}
+    except OSError as e:
+        return {"status": "error", "error": f"OS error: {str(e)}"}
+    except Exception as e:
+        return {"status": "error", "error": f"Unexpected error: {str(e)}"}
 
 
-# Change to folder with deployment scripts
-try:
-    os.chdir('3_DmcsAndPackages')
-    print(f"Successfully changed to: {os.getcwd()}")
-    print(f"Contents in folder: {os.listdir(os.getcwd())}")
-except FileNotFoundError:
-    print("The specified path does not exist.")
-except OSError as e:
-    print(f"Error: {e}")
+if __name__ == '__main__':
+    result = access_bulk_scripts_in_file_explorer(output = {"status": "success",
+                                                            "output_dir": r"Z:\Cab_Ironman\BulkScriptGenerationDeploymentScriptsTest\2024-11-26_15-48-47"},
+                                                bulk_scripts_dir = 'Sources')
+    print(result)
