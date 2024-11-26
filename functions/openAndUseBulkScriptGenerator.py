@@ -8,66 +8,79 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
-try:
-    # Get today's date
-    current_date_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Caboodle_DEV\BulkScriptGenerationDeploymentScriptsTest', 
+                                        console_url = 'https://spn4cdw001.sp.local/Caboodle_DEV', 
+                                        checkboxes_to_check = ['DmcsAndPackages']):
+    """
+    Automates the bulk script generation process on Caboodle.
 
-    # Initialize browser
-    Browser = webdriver.Edge(
-        service=EdgeService(EdgeChromiumDriverManager().install())
-    )
+    Arguments:
+        console_url (str):          Base URL for the Caboodle console.
+        output_directory (str):     Directory path where the scripts will be saved.
+        checkboxes_to_check (str):  List of HTML ids of the checkboxes to select.
 
-    # Open the Caboodle console to initialize login process
-    #ConsoleURL = 'https://spn4cdw001.sp.local/Caboodle_DEV'
-    ConsoleURL = 'https://spn4cdw001.sp.local/Cab_Ironman'
-    Browser.get(ConsoleURL)
+    Returns:
+        None
+    """
+    try:
+        # Get current date and time for unique folder naming
+        current_date_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        output_directory = f"{output_directory}\\{current_date_time}"
 
-    # Open Bulk Script Generator
-    Browser.get(ConsoleURL + "/tools/BulkScriptGeneration")
+        # Initialize browser
+        browser = webdriver.Edge(
+            service=EdgeService(EdgeChromiumDriverManager().install())
+        )
 
-    # Select correct checkbox
-    # Locate checkboxes by ID
-    WebDriverWait(Browser, 10).until(
-        EC.presence_of_element_located((By.ID, "DmcsAndPackages"))
-    )
-    checkbox_dmcs = Browser.find_element(By.ID, 'DmcsAndPackages')
-    checkbox_component_config = Browser.find_element(By.ID, 'ComponentConfiguration')
-    checkbox_sources = Browser.find_element(By.ID, 'Sources')
-    checkbox_custom_sql = Browser.find_element(By.ID, 'CustomSqlObjects')
+        # Navigate to the Bulk Script Generator page
+        browser.get(console_url + "/tools/BulkScriptGeneration")
 
-    # Check the sources checkbox:
-    # NB: To be changed to "DMCs and Packages" at a later stage
-    if not checkbox_dmcs.is_selected():
-        checkbox_dmcs.click()
+        # Wait for the checkboxes to load 
+        WebDriverWait(browser, 10).until(
+            EC.presence_of_element_located((By.ID, "DmcsAndPackages"))
+        )
+        checkbox_dmcs = browser.find_element(By.ID, 'DmcsAndPackages')
+        checkbox_component_config = browser.find_element(By.ID, 'ComponentConfiguration')
+        checkbox_sources = browser.find_element(By.ID, 'Sources')
+        checkbox_custom_sql = browser.find_element(By.ID, 'CustomSqlObjects')
 
-    # Uncheck undesired checkboxes if is checked
-    if checkbox_sources.is_selected():
-        checkbox_sources.click()
-    if checkbox_component_config.is_selected():
-        checkbox_component_config.click()
-    if checkbox_custom_sql.is_selected():
-        checkbox_custom_sql.click()
+        # Click checkbox if:
+        #  1) Checkbox should be checked but is not checked
+        #  2) Checkbox should not be checked but is checked 
+        for checkbox_id, checkbox in checkbox_elements.items():
+            if checkbox_id in checkboxes_to_check and not checkbox.is_selected():
+                checkbox.click()
+            elif checkbox_id not in checkboxes_to_check and checkbox.is_selected():
+                checkbox.click()
 
-    # Write path into input element
-    path_textbox = Browser.find_element(By.ID, 'OutputDirectory')
-    path_textbox.send_keys(f"C:\CustomPackages\Caboodle_DEV\BulkScriptGenerationDeploymentScriptsTest\{current_date_time}")
+        # Write the output directory path into the input element
+        path_textbox = browser.find_element(By.ID, 'OutputDirectory')
+        path_textbox.clear()
+        path_textbox.send_keys(dynamic_output_directory)
 
-    # Press "Generate Scripts" Button
-    generate_btn = Browser.find_element(By.ID, 'formAcceptBtn')
-    generate_btn.click()
+        # Click the "Generate Scripts" button
+        generate_btn = browser.find_element(By.ID, 'formAcceptBtn')
+        generate_btn.click()
 
-    # Wait until final status text is existing
-    WebDriverWait(Browser, 3600).until(
-        EC.invisibility_of_element_located((By.ID, "StatusUpdatesText"))
-    )
-    WebDriverWait(Browser, 3600).until(
-        EC.presence_of_element_located((By.ID, "FinalStatusText"))
-    )
+        # Wait until the final status is displayed
+        WebDriverWait(browser, 3600).until(
+            EC.invisibility_of_element_located((By.ID, "StatusUpdatesText"))
+        )
+        WebDriverWait(browser, 3600).until(
+            EC.presence_of_element_located((By.ID, "FinalStatusText"))
+        )
 
-    #input('Please press "Enter" to close program')
+        print("Script generation completed successfully!")
+        # input('Please press "Enter" to close program')
 
-except Exception as e:
-    print(f"Error! Script aborted because: {e}")
+    except:
+        print(f"Error! Script aborted because: {e}")
 
-finally:
-    Browser.quit()
+    finally:
+        browser.quit()
+
+if __name__ == 'main':
+    # For testing purposes will run in Cab_Ironman sandbox and only for "Sources" (much faster!)
+    open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Caboodle_DEV\BulkScriptGenerationDeploymentScriptsTest', 
+                                        console_url = 'https://spn4cdw001.sp.local/Cab_Ironman', 
+                                        checkboxes_to_check = 'Sources')
