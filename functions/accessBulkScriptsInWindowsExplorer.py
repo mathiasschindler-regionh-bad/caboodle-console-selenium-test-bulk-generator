@@ -1,5 +1,6 @@
 import os
 import fnmatch
+from pprint import pprint
 
 def access_bulk_scripts_in_file_explorer(output: dict, 
                                          bulk_scripts_dir = 'DmcsAndPackages'):
@@ -43,7 +44,17 @@ def access_bulk_scripts_in_file_explorer(output: dict,
         else:
             bulk_scripts_path = os.path.join(epic_folder_path, matching_bulk_scripts_folders[0])
             os.chdir(bulk_scripts_path)
-            print(f"Successfully changed to folder containing '{bulk_scripts_dir}': {os.getcwd()} \n with contents:\n {os.listdir(bulk_scripts_path)}")     
+            print(f"Successfully changed to folder containing '{bulk_scripts_dir}': {os.getcwd()}")
+
+            # Get list of all files ending in .sql in the bulk_scripts_path folder
+            sql_files = []
+            for root, dirs, files in os.walk(bulk_scripts_path):
+                for file in files:
+                    if file.endswith(".sql"):
+                        sql_files.append(os.path.join(root, file))
+            
+            # Return the list of .sql files with full path
+            return {"status": "success", "sql_files": sql_files} 
     
     except FileNotFoundError as e:
         return {"status": "error", "error": f"File not found: {str(e)}"}
@@ -57,4 +68,4 @@ if __name__ == '__main__':
     result = access_bulk_scripts_in_file_explorer(output = {"status": "success",
                                                             "output_dir": r"Z:\Cab_Ironman\BulkScriptGenerationDeploymentScriptsTest\2024-11-26_15-48-47"},
                                                 bulk_scripts_dir = 'Sources')
-    print(result)
+    pprint(result)
