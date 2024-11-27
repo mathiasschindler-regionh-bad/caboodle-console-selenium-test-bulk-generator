@@ -25,6 +25,7 @@ def copy_sql_to_git_repo(input_dict: dict, destination_path = r'\\RGHSOFSCTXAPP0
     status = input_dict.get('status', 'undefined')
 
     if status != 'success': return {"status": "error", "error": "Operation status is not success; aborting."} 
+    print('Beginning copying files from bulk script generation destination to Git repo location ...')
 
     for sql_file in sql_files:
         filename = os.path.basename(sql_file)

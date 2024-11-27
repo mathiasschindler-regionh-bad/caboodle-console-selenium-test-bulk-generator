@@ -38,7 +38,7 @@ def open_and_use_bulk_script_generator(output_directory = 'Z:\Caboodle_DEV\BulkS
         try:
             # CRUCIAL: Increment the attempt counter (otherwise will end in infinite loop)
             attempt += 1
-            print(f"Attempt {attempt} of {max_retries}...")
+            print(f"Bulk Script Generator: Attempt {attempt} of {max_retries}...")
 
             # Get current date and time for unique folder naming
             current_date_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")

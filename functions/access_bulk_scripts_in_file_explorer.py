@@ -22,13 +22,14 @@ def access_bulk_scripts_in_file_explorer(output: dict,
 
     try:
         if output["status"] != "success": return {"status": "error", "error": "Invalid input status. Expected 'success'."}
+        print("Beginning iteration over files exported from Bulk Script Generator ...")
 
         # Extract the output directory
         base_path = output["output_dir"]
 
         # Navigate to base path
         os.chdir(base_path)
-        print(f"Successfully changed to: {os.getcwd()}")
+        print(f"  Successfully changed to: {os.getcwd()}")
 
         # Find the folder that contains "EpicScriptGen" in its name
         matching_folders = [d for d in os.listdir(base_path) if fnmatch.fnmatch(d, "*EpicScriptGen*") and os.path.isdir(d)]
@@ -38,7 +39,7 @@ def access_bulk_scripts_in_file_explorer(output: dict,
         # Change to the matching folder
         epic_folder_path = os.path.join(base_path, matching_folders[0])
         os.chdir(epic_folder_path)
-        print(f"Successfully changed to EpicScriptGen folder: {os.getcwd()}")
+        print(f"  Successfully changed to EpicScriptGen folder: {os.getcwd()}")
 
         # Search for folders that contain the bulk_scripts_dir string as a substring (no need to match the exact prefix)
         matching_bulk_scripts_folders = [d for d in os.listdir(epic_folder_path) if bulk_scripts_dir in d and os.path.isdir(os.path.join(epic_folder_path, d))]
@@ -47,7 +48,7 @@ def access_bulk_scripts_in_file_explorer(output: dict,
         else:
             bulk_scripts_path = os.path.join(epic_folder_path, matching_bulk_scripts_folders[0])
             os.chdir(bulk_scripts_path)
-            print(f"Successfully changed to folder containing '{bulk_scripts_dir}': {os.getcwd()}")
+            print(f"  Successfully changed to folder containing '{bulk_scripts_dir}': {os.getcwd()}")
 
             # Get list of all files ending in .sql in the bulk_scripts_path folder
             sql_files = []

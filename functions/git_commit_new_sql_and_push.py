@@ -4,6 +4,8 @@ import subprocess
 def git_commit_new_sql_and_push(repo_path = r'\\RGHSOFSCTXAPP01\VA-NP-FolderRedir$\Cogito\IMT-A-MSCH0706\Downloads\DAP-SP-Caboodle\Deployments\DEV', 
                             branch = 'main',
                             commit_message = 'Automated update to sync scripts in Caboodle_DEV with Git'):
+
+    print('Beginning commiting new files and pushing to remote ...')
     try:
         # Go to repo directory
         os.chdir(repo_path)
