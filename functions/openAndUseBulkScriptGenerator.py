@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
-def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Caboodle_DEV\BulkScriptGenerationDeploymentScripts', 
+def open_and_use_bulk_script_generator(output_directory = 'Z:\Caboodle_DEV\BulkScriptGenerationDeploymentScripts', 
                                         console_url = 'https://spn4cdw001.sp.local/Caboodle_DEV', 
                                         checkboxes_to_check = ['DmcsAndPackages'],
                                         headless = True):
@@ -93,7 +93,7 @@ def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Cab
             EC.presence_of_element_located((By.ID, "FinalStatusText"))
         )
 
-        # input('Please press "Enter" to close program')
+        #input('Please press "Enter" to close program')
 
         return {"status": "success", "output_dir": output_directory}
 
@@ -106,8 +106,8 @@ def open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Cab
 
 if __name__ == '__main__':
     # For testing purposes will run in Cab_Ironman sandbox and only for "Sources" (much faster!)
-    result = open_and_use_bulk_script_generator(output_directory = 'C:\CustomPackages\Cab_Ironman\BulkScriptGenerationDeploymentScriptsTest', 
-                                        console_url = 'https://spn4cdw001.sp.local/Cab_Ironman', 
+    result = open_and_use_bulk_script_generator(output_directory = 'Z:\\Cab_Ironman\\BulkScriptGenerationDeploymentScriptsTest', 
+                                        console_url = 'https://spn4cdw001.sp.local/Caboodle_DEV', #'https://spn4cdw001.sp.local/Cab_Ironman', 
                                         checkboxes_to_check = ['Sources'],
                                         headless = False)
-    print(result)
+    print(result) 
