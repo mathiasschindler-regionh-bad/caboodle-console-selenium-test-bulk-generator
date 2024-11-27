@@ -10,3 +10,8 @@ The following document describes how this project works and is intended to be se
 pip install -r requirements.txt
 ```
 though this should probably be changed to using a virtual environment, to avoid polluting the main Python environment.
+
+
+### Future Improvements
+- [ ] Add project to VDI Windows Task Scheduler for recurrent automatic executions.
+- [ ] Add requirement to only push deployment scripts if source version is <4 versions older than target. Requires a way to fetch current target version however.
