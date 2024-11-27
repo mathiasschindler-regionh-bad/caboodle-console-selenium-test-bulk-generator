@@ -65,7 +65,10 @@ def access_bulk_scripts_in_file_explorer(output: dict,
 
 
 if __name__ == '__main__':
-    result = access_bulk_scripts_in_file_explorer(output = {"status": "success",
-                                                            "output_dir": r"Z:\Cab_Ironman\BulkScriptGenerationDeploymentScriptsTest\2024-11-26_15-48-47"},
-                                                bulk_scripts_dir = 'Sources')
+    # result = access_bulk_scripts_in_file_explorer(output = {"status": "success",
+    #                                                         "output_dir": r"Z:\Cab_Ironman\BulkScriptGenerationDeploymentScriptsTest\2024-11-26_15-48-47"},
+    #                                             bulk_scripts_dir = 'Sources')
+    result = access_bulk_scripts_in_file_explorer(output = {'status': 'success', 
+                                                            'output_dir': 'Z:\\Cab_Ironman\\BulkScriptGenerationDeploymentScriptsTest\\2024-11-27_13-52-24'},
+                                                bulk_scripts_dir = 'DmcsAndPackages')
     pprint(result)
