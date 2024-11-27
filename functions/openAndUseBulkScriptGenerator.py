@@ -20,9 +20,13 @@ def open_and_use_bulk_script_generator(output_directory = 'Z:\Caboodle_DEV\BulkS
         console_url (str):          Base URL for the Caboodle console.
         output_directory (str):     Directory path where the scripts will be saved.
         checkboxes_to_check (str):  List of HTML ids of the checkboxes to select.
+        headless (bool):            Whether to run web browser with GUI or in the background (i.e. "headless").
 
     Returns:
-        None
+        dict: A dictionary with the final status and directory contents or error details.
+
+    Author: Mathias Schindler (mathias.schindler.01@regionh.dk)
+    Creation Date: 27-11-2024
     """
     try:
         # Get current date and time for unique folder naming

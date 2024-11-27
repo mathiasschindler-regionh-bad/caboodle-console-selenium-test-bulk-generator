@@ -2,6 +2,25 @@ import os
 import shutil
 
 def copy_sql_to_git_repo(input_dict: dict, destination_path = r'\\RGHSOFSCTXAPP01\VA-NP-FolderRedir$\Cogito\IMT-A-MSCH0706\Downloads\DAP-SP-Caboodle\Deployments\DEV'):
+    """
+    Copies SQL files into corresponding subfolders within a Git repository.
+
+    Args:
+        input_dict (dict): Input details with keys:
+            - "status" (str):      Status of the operation ("success" expected). If not "success", the function aborts.
+            - "sql_files" (list):  List of file paths for SQL scripts to copy.
+        destination_path (str):     Root path of the Git repository where files should be copied. 
+                                    Each SQL file's folder is named after the file (without the extension).
+
+    Returns:
+        dict: A dictionary with the final status:
+            - If "status" is not "success", returns {"status": "error", "error": "<error_message>"}.
+            - Otherwise, performs the copy operation and prints the results.
+
+    Author: Mathias Schindler (mathias.schindler.01@regionh.dk)
+    Creation Date: 27-11-2024
+    """
+    
     sql_files = input_dict.get('sql_files', [])
     status = input_dict.get('status', 'undefined')
 

@@ -15,6 +15,9 @@ def access_bulk_scripts_in_file_explorer(output: dict,
 
     Returns:
         dict: A dictionary with the final status and directory contents or error details.
+
+    Author: Mathias Schindler (mathias.schindler.01@regionh.dk)
+    Creation Date: 27-11-2024
     """
 
     try:
