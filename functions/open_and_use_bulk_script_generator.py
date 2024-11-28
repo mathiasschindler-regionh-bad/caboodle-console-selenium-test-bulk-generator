@@ -8,6 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from selenium.common.exceptions import WebDriverException, TimeoutException
+import socket
 
 def open_and_use_bulk_script_generator(output_directory = 'Z:\Caboodle_DEV\BulkScriptGenerationDeploymentScripts', 
                                         console_url = 'https://spn4cdw001.sp.local/Caboodle_DEV', 
@@ -108,15 +110,25 @@ def open_and_use_bulk_script_generator(output_directory = 'Z:\Caboodle_DEV\BulkS
                 EC.presence_of_element_located((By.ID, "FinalStatusText"))
             )
 
-            #input('Please press "Enter" to close program')
+            # input('Please press "Enter" to close program')
 
             return {"status": "success", "output_dir": output_directory}
+
+        except (WebDriverException, socket.gaierror) as e:
+            print(f"WebDriverExceptions failure occurred: {e}")
+            if attempt < max_retries:
+                print(f"Retrying in {retry_delay_secs} seconds...")
+                time.sleep(retry_delay_secs)
+            else:
+                print("Max retries reached. Aborting.")
+                return {"status": "error", "error": f"Failed after {max_retries} attempts. Error: {e}"}
 
         except Exception as e:
             print(f"Error! Script aborted because: {e}")
             return {"status": "error", "error": str(e)}
 
         finally:
+            time.sleep(5) # Wait 5 seconds, then close browser
             browser.quit()
 
 if __name__ == '__main__':
