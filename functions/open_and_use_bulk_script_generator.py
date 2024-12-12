@@ -11,7 +11,7 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from selenium.common.exceptions import WebDriverException, TimeoutException
 import socket
 
-def open_and_use_bulk_script_generator(output_directory = 'Z:\Caboodle_DEV\BulkScriptGenerationDeploymentScripts', 
+def open_and_use_bulk_script_generator(output_directory = '\\spn4cdw001.sp.local\CustomPackages\Cab_Ironman\BulkScriptGenerationDeploymentScriptsTest', 
                                         console_url = 'https://spn4cdw001.sp.local/Caboodle_DEV', 
                                         checkboxes_to_check = ['DmcsAndPackages'],
                                         headless = True,
@@ -133,7 +133,7 @@ def open_and_use_bulk_script_generator(output_directory = 'Z:\Caboodle_DEV\BulkS
 
 if __name__ == '__main__':
     # For testing purposes will run in Cab_Ironman sandbox and only for "Sources" (much faster!)
-    result = open_and_use_bulk_script_generator(output_directory = 'Z:\\Cab_Ironman\\BulkScriptGenerationDeploymentScriptsTest', 
+    result = open_and_use_bulk_script_generator(output_directory = '\\spn4cdw001.sp.local\CustomPackages\Cab_Ironman\BulkScriptGenerationDeploymentScriptsTest', 
                                         console_url = 'https://spn4cdw001.sp.local/Caboodle_DEV', #'https://spn4cdw001.sp.local/Cab_Ironman', 
                                         checkboxes_to_check = ['Sources'],
                                         headless = False,

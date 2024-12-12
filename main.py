@@ -8,8 +8,8 @@ from functions.git_commit_new_sql_and_push import git_commit_new_sql_and_push
 # Initialize key parameters
 branch = 'SFSTRY0133294-testing'
 git_repo_path = r'\\RGHSOFSCTXAPP01\VA-NP-FolderRedir$\Cogito\IMT-A-MSCH0706\Downloads\DAP-SP-Caboodle\Deployments\DEV'
-bulk_script_gen_export_destination_parent = r'Z:\\Cab_Ironman\\BulkScriptGenerationDeploymentScriptsTest' 
-caboodle_console_url = 'https://spn4cdw001.sp.local/Cab_Valkyrie'
+bulk_script_gen_export_destination_parent = r'\\spn4cdw001.sp.local\CustomPackages\Cab_Ironman\BulkScriptGenerationDeploymentScriptsTest' 
+caboodle_console_url = 'https://spn4cdw001.sp.local/Caboodle_DEV'
 
 
 # Run bulk script generator with default values
