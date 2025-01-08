@@ -13,8 +13,6 @@ though this should probably be changed to using a virtual environment, to avoid 
 
 
 ### Future Improvements
-- [ ] Write documentation
-- [ ] Determine appropriate locations on VDI server to stores output from Bulk Script Generator and Git repo clone.
 - [ ] Add project to VDI Windows Task Scheduler for recurrent automatic executions.
 - [ ] Add functionality to log results, e.g. in a `.txt` file
-- [ ] Add requirement to only push deployment scripts if source version is <4 versions older than target. Requires a way to fetch current target version however.
+- [ ] Add requirement to only push deployment scripts if source version is <4 versions older than target. Requires a way to fetch current target version, presumably with GitHub API.
